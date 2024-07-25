@@ -144,8 +144,6 @@ export const login = async (req, res) => {
 }
 
 
-
-
 export const sendForgetPasswordOTP = async (req, res) => {
     try {
         const { email } = req.body;

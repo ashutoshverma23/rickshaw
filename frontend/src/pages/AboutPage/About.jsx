@@ -33,7 +33,6 @@ const About = () => {
           </div>
         </div>
       </header>
-      <Footer />
     </>
   );
 };

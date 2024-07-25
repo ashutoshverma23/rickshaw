@@ -3,7 +3,6 @@ import { register, sendRegisterOTP } from '../controllers/passenger.controller.j
 
 const router = express.Router();
 
-
 router.post('/register', register);
 router.post('/sendRegisterOTP', sendRegisterOTP);
 

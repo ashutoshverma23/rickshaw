@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
-const Nav = ({ openPassengerLogin, openDriverLogin }) => {
+const Nav = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleNavbar = () => setIsOpen(!isOpen);
@@ -39,18 +39,16 @@ const Nav = ({ openPassengerLogin, openDriverLogin }) => {
         <Link to="/help" className="hover:underline">
           Help
         </Link>
-        <button
-          onClick={openPassengerLogin}
-          className="bg-gray-800 px-4 py-2 rounded"
-        >
-          Login as Passenger
-        </button>
-        <button
-          onClick={openDriverLogin}
-          className="bg-green-600 px-4 py-2 rounded"
-        >
-          Login as Driver
-        </button>
+        <Link to="/passenger-login">
+          <button className="bg-gray-800 px-4 py-2 rounded">
+            Login as Passenger
+          </button>
+        </Link>
+        <Link to="/driver-login">
+          <button className="bg-green-600 px-4 py-2 rounded">
+            Login as Driver
+          </button>
+        </Link>
       </div>
       {isOpen && (
         <div className="absolute top-16 left-0 w-full bg-white text-black z-50">
@@ -60,24 +58,16 @@ const Nav = ({ openPassengerLogin, openDriverLogin }) => {
           <Link to="/help" className="block px-4 py-2 hover:bg-gray-400">
             Help
           </Link>
-          <button
-            onClick={() => {
-              setIsOpen(false);
-              openPassengerLogin();
-            }}
-            className="block w-full text-left px-4 py-2 hover:bg-gray-400"
-          >
-            Login as Passenger
-          </button>
-          <button
-            onClick={() => {
-              setIsOpen(false);
-              openDriverLogin();
-            }}
-            className="block w-full text-left px-4 py-2 hover:bg-gray-400"
-          >
-            Login as Driver
-          </button>
+          <Link to="/passenger-login">
+            <button className="block w-full text-left px-4 py-2 hover:bg-gray-400">
+              Login as Passenger
+            </button>
+          </Link>
+          <Link to="/driver-login">
+            <button className="block w-full text-left px-4 py-2 hover:bg-gray-400">
+              Login as Driver
+            </button>
+          </Link>
         </div>
       )}
     </nav>

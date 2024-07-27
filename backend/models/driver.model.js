@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const passengerSchema = new mongoose.Schema({
+const driverSchema = new mongoose.Schema({
     fullName: {
         type: String,
         required: true
@@ -11,6 +11,10 @@ const passengerSchema = new mongoose.Schema({
         unique: true
     },
     password: {
+        type: String,
+        required: true
+    },
+    licensePlate: {
         type: String,
         required: true
     },
@@ -27,6 +31,5 @@ const passengerSchema = new mongoose.Schema({
     }
 );
 
-const Passenger = mongoose.model('Passenger', passengerSchema)
-export default Passenger
-
+const Driver = mongoose.model('Driver', driverSchema)
+export default Driver

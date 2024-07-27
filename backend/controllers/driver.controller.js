@@ -1,12 +1,12 @@
 import bcrypt from 'bcryptjs';
-import Passenger from '../models/passenger.model.js';
+import Driver from '../models/driver.model.js';
 import generateTokenAndSetCookie from '../utils/generateToken.js';
 import { createTransporter } from './email.controller.js';
 
 // Register controller
 export const register = async (req, res) => {
     try {
-        const { fullName, email, password, confirmPassword } = req.body;
+        const { fullName, email, password, confirmPassword, licensePlate } = req.body;
         const verificationToken = Math.floor(100000 + Math.random() * 900000).toString();
 
         if (password !== confirmPassword) {
@@ -14,8 +14,8 @@ export const register = async (req, res) => {
         }
 
         // Check if the email is already registered
-        const existingPassenger = await Passenger.findOne({ email });
-        if (existingPassenger) {
+        const existingDriver = await Driver.findOne({ email });
+        if (existingDriver) {
             return res.status(400).json({ message: 'Email already registered' });
         }
 
@@ -23,20 +23,21 @@ export const register = async (req, res) => {
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
-        // Create a new passenger
-        const newPassenger = new Passenger({
+        // Create a new Driver
+        const newDriver = new Driver({
             fullName,
             email,
             password: hashedPassword,
+            licensePlate,
             verificationToken,
         });
 
-        if (newPassenger) {
-            generateTokenAndSetCookie(newPassenger._id, res);
+        if (newDriver) {
+            generateTokenAndSetCookie(newDriver._id, res);
 
-            await newPassenger.save();
+            await newDriver.save();
+
         }
-
         const transporter = await createTransporter();
         await transporter.sendMail({
             from: 'ashutoshrgnict@gmail.com',
@@ -45,18 +46,19 @@ export const register = async (req, res) => {
             html: `Click <a href="http://localhost:3000/verify-email/${verificationToken}">here</a> to verify your email.`,
         });
 
+
         res.status(201).json({
-            _id: newPassenger._id,
-            fullName: newPassenger.fullName,
-            email: newPassenger.email,
-            message: 'Passenger registered successfully. Please check your email to verify your account.',
-        });
+            _id: newDriver._id,
+            fullName: newDriver.fullName,
+            email: newDriver.email,
+            mesage: 'Driver registered successfully. Please check your email to verify your account.',
+        })
     } catch (error) {
+        // Handle any errors
         console.log("Error in register controller", error.message);
         res.status(500).json({ message: 'Internal server error' });
     }
 };
-
 
 // Login controller
 export const login = async (req, res) => {
@@ -64,23 +66,23 @@ export const login = async (req, res) => {
         const { email, password } = req.body;
 
         // Check if the email is registered
-        const passenger = await Passenger.findOne({ email });
-        if (!passenger) {
+        const Driver = await Driver.findOne({ email });
+        if (!Driver) {
             return res.status(401).json({ message: 'Invalid email or password' });
         }
 
         // Compare the provided password with the hashed password
-        const isPasswordValid = await bcrypt.compare(password, passenger.password || "");
-        if (!passenger || !isPasswordValid) {
+        const isPasswordValid = await bcrypt.compare(password, Driver.password || "");
+        if (!Driver || !isPasswordValid) {
             return res.status(401).json({ message: 'Invalid email or password' });
         }
 
-        generateTokenAndSetCookie(passenger._id, res);
+        generateTokenAndSetCookie(Driver._id, res);
 
         res.status(200).json({
-            _id: passenger._id,
-            fullName: passenger.fullName,
-            email: passenger.email,
+            _id: Driver._id,
+            fullName: Driver.fullName,
+            email: Driver.email,
         });
 
     } catch (error) {
@@ -99,6 +101,7 @@ export const logout = async (_, res) => {
     }
 }
 
+// get all drivers
 export const verifyEmail = async (req, res) => {
     try {
         const { token } = req.params;
@@ -119,13 +122,13 @@ export const verifyEmail = async (req, res) => {
     }
 };
 
-// get all passengers
-export const getAllPassengers = async (req, res) => {
+
+export const getAllDrivers = async (req, res) => {
     try {
-        const passengers = await Passenger.find();
-        res.status(200).json(passengers);
+        const drivers = await Driver.find();
+        res.status(200).json(drivers);
     } catch (error) {
-        console.log("Error in get all passengers", error.message);
+        console.log("Error in get all drivers", error.message);
         res.status(500).json({ message: 'Internal server error' });
     }
 }

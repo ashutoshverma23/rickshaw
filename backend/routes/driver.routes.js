@@ -1,10 +1,10 @@
 import express from 'express';
-import { register, login, getAllPassengers } from '../controllers/passenger.controller.js';
+import { register, login, getAllDrivers } from '../controllers/driver.controller.js';
 
 const router = express.Router();
 
 router.post('/register', register);
 router.post('/login', login);
-router.get('/all', getAllPassengers);
+router.get('/all', getAllDrivers);
 
 export default router;

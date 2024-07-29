@@ -1,18 +1,10 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { MapContainer, TileLayer, Marker, Circle, useMap } from "react-leaflet";
+import { MapContainer, TileLayer } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
-import { useAuthContext } from "../context/AuthContext";
-import { PassengerIcon, DriverIcon } from "./maps/MapIcons";
-
-function SetViewOnClick({ coords }) {
-  const map = useMap();
-  useEffect(() => {
-    if (coords) {
-      map.setView(coords, map.getZoom());
-    }
-  }, [coords, map]);
-  return null;
-}
+import { useAuthContext } from "../../context/AuthContext";
+import SetViewOnClick from "./SetViewOnClick";
+import UserMarker from "./UserMarker";
+import OtherUserMarkers from "./OtherUserMarker";
 
 function Map() {
   const { authUser } = useAuthContext();
@@ -21,7 +13,11 @@ function Map() {
   const [active, setActive] = useState(false);
   const [otherUsers, setOtherUsers] = useState([]);
 
+  console.log(authUser);
+
   const updateLocation = async (latitude, longitude) => {
+    if (!authUser) return; // Exit early if authUser is not available
+
     try {
       await fetch("/api/user-status/update-status", {
         method: "PUT",
@@ -42,24 +38,27 @@ function Map() {
   };
 
   const fetchOtherUsers = useCallback(async () => {
+    if (!authUser) return; // Exit early if authUser is not available
+
     try {
       const response = await fetch("/api/user-status/active-users");
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const data = await response.json();
-      console.log("fetching data", data);
       setOtherUsers(data.filter((user) => user.userType !== authUser.role));
     } catch (error) {
       console.error("Error fetching users:", error);
     }
-  }, [authUser.role]);
+  }, [authUser]);
 
   useEffect(() => {
     fetchOtherUsers();
   }, [fetchOtherUsers]);
 
   useEffect(() => {
+    if (!authUser) return; // Exit early if authUser is not available
+
     const geo = navigator.geolocation;
 
     if (!geo) {
@@ -83,15 +82,17 @@ function Map() {
         }
       },
       {
-        timeout: 1000,
+        timeout: 5000,
         maximumAge: 0,
       }
     );
 
     return () => geo.clearWatch(watcher);
-  }, [active]);
+  }, [active, authUser]);
 
   const handleToggleActive = async () => {
+    if (!authUser || !position) return; // Exit early if authUser or position is not available
+
     const newActiveState = !active;
     try {
       await fetch("/api/user-status/update-status", {
@@ -117,11 +118,11 @@ function Map() {
   if (!position) return <div>Loading...</div>;
 
   return (
-    <div className="w-full">
+    <div className="flex flex-col justify-center items-center">
       <MapContainer
         center={position}
         zoom={16}
-        className="h-[50vh] w-4/5 md:w-1/2 p-4 border-2 border-gray-300 rounded-md"
+        className="h-[50vh] w-full  md:w-1/2 p-4 border-2 border-gray-300 rounded-md"
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -129,31 +130,19 @@ function Map() {
         />
         {position && (
           <>
-            <Marker
+            <UserMarker
               position={position}
-              icon={authUser.role === "passenger" ? PassengerIcon : DriverIcon}
+              accuracy={accuracy}
+              role={authUser?.role}
             />
-            <Circle center={position} radius={accuracy} />
             <SetViewOnClick coords={position} />
           </>
         )}
-        {otherUsers.map(
-          (user) =>
-            user.latitude !== undefined &&
-            user.longitude !== undefined && (
-              <Marker
-                key={user._id}
-                position={[user.latitude, user.longitude]}
-                icon={
-                  user.userType === "passenger" ? PassengerIcon : DriverIcon
-                }
-              />
-            )
-        )}
+        <OtherUserMarkers otherUsers={otherUsers} />
       </MapContainer>
       <button
         onClick={handleToggleActive}
-        className={`mt-4 px-4 py-2 ${
+        className={`mt-4 px-4 py-2  ${
           active ? "bg-red-500" : "bg-green-500"
         } text-white rounded`}
       >

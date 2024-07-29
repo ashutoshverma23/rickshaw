@@ -27,7 +27,7 @@ export const useDriverRegister = () => {
 
             const userData = { ...data, role: "driver" };
             localStorage.setItem("User", JSON.stringify(userData));
-            setAuthUser(data);
+            setAuthUser(userData);
             toast.success("Registration successful");
             navigate("/");
         } catch (err) {

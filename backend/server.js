@@ -4,14 +4,18 @@ import cors from "cors";
 import connectDB from "./db/conn.js";
 import passengerRoutes from "./routes/passenger.routes.js";
 import driverRoutes from "./routes/driver.routes.js";
-import { verifyEmail } from "./controllers/passenger.controller.js";
+import userStatusRoutes from "./routes/userStatus.routes.js";
 import http from 'http';
 import { Server } from 'socket.io';
+import cookieParser from "cookie-parser";
+
 const app = express();
 const PORT = process.env.PORT || 5000;
 
 const server = http.createServer(app);
 const io = new Server(server);
+
+app.use(cookieParser());
 
 app.use(cors({
     origin: "http://localhost:3000/",
@@ -21,7 +25,7 @@ dotenv.config();
 
 app.use("/api/passenger", passengerRoutes);
 app.use("/api/driver", driverRoutes);
-app.get('/api/verify-email/:token', verifyEmail);
+app.use("/api/user-status", userStatusRoutes);
 
 server.listen(PORT, () => {
     connectDB();

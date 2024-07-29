@@ -12,10 +12,15 @@ import DriverRegister from "./pages/Registration/DriverRegistration";
 import TravelPage from "./pages/TravelPage/TravelPage";
 import Footer from "./components/Footer";
 import "./App.css";
+import DriverProfile from "./pages/ProfilePage/DriverProfile";
+import PassengerProfile from "./pages/ProfilePage/PassengerProfile";
+import { useAuthContext } from "./context/AuthContext";
 
 function App() {
+  const { authUser } = useAuthContext();
+
   return (
-    <div>
+    <div className="min-h-svh">
       <Nav />
       <Routes>
         <Route path="/" element={<Home />} />
@@ -24,9 +29,21 @@ function App() {
         <Route path="/passenger-login" element={<PassengerLogin />} />
         <Route path="/driver-login" element={<DriverLogin />} />
         <Route path="/passenger-register" element={<PassengerRegister />} />
-        <Route path="/verify-email/:token" element={<VerifyEmail />} />
+        <Route
+          path="/passenger/verify-email/:token"
+          element={<VerifyEmail userType="passenger" />}
+        />
+        <Route
+          path="/driver/verify-email/:token"
+          element={<VerifyEmail userType="driver" />}
+        />
         <Route path="/driver-register" element={<DriverRegister />} />
         <Route path="/travel" element={<TravelPage />} />
+        {authUser?.role === "passenger" ? (
+          <Route path="/profile" element={<PassengerProfile />} />
+        ) : (
+          <Route path="/profile" element={<DriverProfile />} />
+        )}
       </Routes>
       <Footer />
     </div>

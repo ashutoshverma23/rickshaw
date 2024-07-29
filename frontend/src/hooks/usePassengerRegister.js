@@ -28,7 +28,7 @@ export const usePassengerRegister = () => {
             console.log("user data is", data);
             const userData = { ...data, role: "passenger" };
             localStorage.setItem("User", JSON.stringify(userData));
-            setAuthUser(data);
+            setAuthUser(userData);
             toast.success("Registration successful");
             navigate("/");
 

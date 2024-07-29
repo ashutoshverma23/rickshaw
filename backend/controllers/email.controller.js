@@ -1,6 +1,9 @@
 import nodemailer from 'nodemailer';
 import { google } from 'googleapis';
 import dotenv from 'dotenv';
+import { verifyEmailForModel } from '../middleware/verifyEmailForModel.js';
+import Passenger from '../models/passenger.model.js';
+import Driver from '../models/driver.model.js';
 
 dotenv.config();
 
@@ -39,5 +42,13 @@ export const createTransporter = async () => {
         throw error;
     }
 };
+
+export const verifyPassengerEmail = async (req, res) => {
+    verifyEmailForModel(req, res, Passenger);
+}
+
+export const verifyDriverEmail = async (req, res) => {
+    verifyEmailForModel(req, res, Driver);
+}
 
 

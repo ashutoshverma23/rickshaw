@@ -2,13 +2,13 @@ import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import toast from "react-hot-toast";
 
-const VerifyEmail = () => {
+const VerifyEmail = ({userType}) => {
   const { token } = useParams();
 
   useEffect(() => {
     const verifyEmail = async () => {
       try {
-        const response = await fetch(`/api/verify-email/${token}`);
+        const response = await fetch(`/api/${userType}/verify-email/${token}`);
         const data = await response.json();
 
         if (response.status === 200) {

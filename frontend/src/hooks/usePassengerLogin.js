@@ -27,7 +27,7 @@ export const usePassengerLogin = () => {
 
             const userData = { ...data, role: "passenger" };
             localStorage.setItem("User", JSON.stringify(userData));
-            setAuthUser(data);
+            setAuthUser(userData);
             toast.success("Login successful");
             navigate("/");
 

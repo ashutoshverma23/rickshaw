@@ -1,18 +1,41 @@
 import jwt from 'jsonwebtoken'
+import dotenv from 'dotenv'
+import Passenger from '../models/passenger.model.js'
+import Driver from '../models/driver.model.js'
 
-export const auth = async (req, res, next) => {
+
+dotenv.config()
+
+const authenticate = async (req, res, next) => {
+
+    const token = req.cookies.jwt;
+    console.log("Token in auth middleware", token);
+
+    if (!token) {
+        return res.status(401).json({ message: 'Please authenticate.' });
+    }
+
     try {
-        if (!req.headers.auth_token) return res.status(401).json({ message: 'token not found' })
+        const decoded = jwt.verify(token, process.env.JWT_SECRET || "58BQgyvWqGt8rP5mQWXtPBXLmLeJ/lJtLXTuQab7BaI=");
 
-        const token = await req.headers.auth_token
+        console.log("Decoded token", decoded);
 
-        if (token) {
-            const decodedToken = jwt.verify(token, process.env.AUTH_TOKEN_SECRET_KEY)
-            req.userId = decodedToken._id
+        let user = await Driver.findById(decoded.userId);
+
+        if (!user) {
+            user = await Passenger.findById(decoded.userId);
         }
+
+        if (!user) {
+            return res.status(401).json({ message: 'Please authenticate.' });
+        }
+
+        req.user = user;
+        next();
+    } catch (error) {
+        console.log("Error in authentication middleware", error.message);
+        res.status(401).json({ message: 'Please authenticate.' });
     }
-    catch (err) {
-        res.status(401).json({ message: 'authentication failed' })
-    }
-    next()
-}
+};
+
+export default authenticate;

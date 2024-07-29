@@ -28,7 +28,7 @@ export const useDriverLogin = () => {
             console.log("user data is", data);
             const userData = { ...data, role: "driver" };
             localStorage.setItem("User", JSON.stringify(userData));
-            setAuthUser(data);
+            setAuthUser(userData);
             toast.success("Login successful");
             navigate("/");
 

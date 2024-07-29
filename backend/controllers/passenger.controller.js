@@ -99,26 +99,6 @@ export const logout = async (_, res) => {
     }
 }
 
-export const verifyEmail = async (req, res) => {
-    try {
-        const { token } = req.params;
-
-        const passenger = await Passenger.findOne({ verificationToken: token });
-        if (!passenger) {
-            return res.status(404).json({ message: 'Invalid verification token' });
-        }
-
-        passenger.isVerified = true;
-        passenger.verificationToken = undefined;
-        await passenger.save();
-
-        res.status(200).json({ message: 'Email verified successfully' });
-    } catch (error) {
-        console.log("Error in email verification", error.message);
-        res.status(500).json({ message: 'Internal server error' });
-    }
-};
-
 // get all passengers
 export const getAllPassengers = async (req, res) => {
     try {
@@ -126,6 +106,19 @@ export const getAllPassengers = async (req, res) => {
         res.status(200).json(passengers);
     } catch (error) {
         console.log("Error in get all passengers", error.message);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+}
+
+export const getPassengerProfile = async (req, res) => {
+    try {
+        const passenger = await Passenger.findById(req.user._id);
+        if (!passenger) {
+            return res.status(404).json({ message: 'Passenger not found' });
+        }
+        res.status(200).json(passenger);
+    } catch (error) {
+        console.log("Error in get passenger profile", error.message);
         res.status(500).json({ message: 'Internal server error' });
     }
 }

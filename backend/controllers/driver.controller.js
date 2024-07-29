@@ -14,8 +14,8 @@ export const register = async (req, res) => {
         }
 
         // Check if the email is already registered
-        const existingDriver = await Driver.findOne({ email });
-        if (existingDriver) {
+        const existingdriver = await Driver.findOne({ email });
+        if (existingdriver) {
             return res.status(400).json({ message: 'Email already registered' });
         }
 
@@ -23,8 +23,8 @@ export const register = async (req, res) => {
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
-        // Create a new Driver
-        const newDriver = new Driver({
+        // Create a new driver
+        const newdriver = new Driver({
             fullName,
             email,
             password: hashedPassword,
@@ -32,10 +32,10 @@ export const register = async (req, res) => {
             verificationToken,
         });
 
-        if (newDriver) {
-            generateTokenAndSetCookie(newDriver._id, res);
+        if (newdriver) {
+            generateTokenAndSetCookie(newdriver._id, res);
 
-            await newDriver.save();
+            await newdriver.save();
 
         }
         const transporter = await createTransporter();
@@ -48,10 +48,10 @@ export const register = async (req, res) => {
 
 
         res.status(201).json({
-            _id: newDriver._id,
-            fullName: newDriver.fullName,
-            email: newDriver.email,
-            mesage: 'Driver registered successfully. Please check your email to verify your account.',
+            _id: newdriver._id,
+            fullName: newdriver.fullName,
+            email: newdriver.email,
+            mesage: 'driver registered successfully. Please check your email to verify your account.',
         })
     } catch (error) {
         // Handle any errors
@@ -66,23 +66,23 @@ export const login = async (req, res) => {
         const { email, password } = req.body;
 
         // Check if the email is registered
-        const Driver = await Driver.findOne({ email });
-        if (!Driver) {
+        const driver = await Driver.findOne({ email });
+        if (!driver) {
             return res.status(401).json({ message: 'Invalid email or password' });
         }
 
         // Compare the provided password with the hashed password
-        const isPasswordValid = await bcrypt.compare(password, Driver.password || "");
-        if (!Driver || !isPasswordValid) {
+        const isPasswordValid = await bcrypt.compare(password, driver.password || "");
+        if (!driver || !isPasswordValid) {
             return res.status(401).json({ message: 'Invalid email or password' });
         }
 
-        generateTokenAndSetCookie(Driver._id, res);
+        generateTokenAndSetCookie(driver._id, res);
 
         res.status(200).json({
-            _id: Driver._id,
-            fullName: Driver.fullName,
-            email: Driver.email,
+            _id: driver._id,
+            fullName: driver.fullName,
+            email: driver.email,
         });
 
     } catch (error) {
@@ -101,34 +101,26 @@ export const logout = async (_, res) => {
     }
 }
 
-// get all drivers
-export const verifyEmail = async (req, res) => {
-    try {
-        const { token } = req.params;
-
-        const passenger = await Passenger.findOne({ verificationToken: token });
-        if (!passenger) {
-            return res.status(404).json({ message: 'Invalid verification token' });
-        }
-
-        passenger.isVerified = true;
-        passenger.verificationToken = undefined;
-        await passenger.save();
-
-        res.status(200).json({ message: 'Email verified successfully' });
-    } catch (error) {
-        console.log("Error in email verification", error.message);
-        res.status(500).json({ message: 'Internal server error' });
-    }
-};
-
-
 export const getAllDrivers = async (req, res) => {
     try {
         const drivers = await Driver.find();
         res.status(200).json(drivers);
     } catch (error) {
         console.log("Error in get all drivers", error.message);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+}
+
+
+export const getDriverProfile = async (req, res) => {
+    try {
+        const driver = await Driver.findById(req.user._id);
+        if (!driver) {
+            return res.status(404).json({ message: 'Driver not found' });
+        }
+        res.status(200).json(driver);
+    } catch (error) {
+        console.log("Error in getProfile controller", error.message);
         res.status(500).json({ message: 'Internal server error' });
     }
 }

@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useAuthContext } from "../context/AuthContext";
+import { useAuthContext } from "../../context/AuthContext";
+import useDriverLogout from "../../hooks/useDriverLogout";
+import usePassengerLogout from "../../hooks/usePassengerLogout";
 
 const Nav = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -10,6 +12,8 @@ const Nav = () => {
   const loginRef = useRef(null);
   const registerRef = useRef(null);
   const navigate = useNavigate();
+  const { driverLogout } = useDriverLogout();
+  const { passengerLogout } = usePassengerLogout();
 
   const handleClickOutside = (event) => {
     if (loginRef.current && !loginRef.current.contains(event.target)) {
@@ -35,9 +39,12 @@ const Nav = () => {
     setShowRegisterDropdown(false);
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem("User");
-    setAuthUser(null);
+  const handleLogout = async () => {
+    if (authUser.role === "driver") {
+      driverLogout();
+    } else {
+      passengerLogout();
+    }
     navigate("/");
   };
 

@@ -10,13 +10,20 @@ export const useDriverRegister = () => {
         const success = handleInputError({ fullName, email, password, confirmPassword, drivingLicense, licensePlate });
         if (!success) return;
 
+        const formData = new FormData();
+        formData.append("fullName", fullName);
+        formData.append("email", email);
+        formData.append("password", password);
+        formData.append("confirmPassword", confirmPassword);
+        formData.append("licensePlate", licensePlate);
+        if (drivingLicense) {
+            formData.append("drivingLicense", drivingLicense);
+        }
+
         try {
             const response = await fetch("/api/driver/register", {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ fullName, email, password, confirmPassword, drivingLicense, licensePlate }),
+                body: formData,
             });
 
             const data = await response.json();
@@ -28,20 +35,20 @@ export const useDriverRegister = () => {
             const userData = { ...data, role: "driver" };
             localStorage.setItem("User", JSON.stringify(userData));
             setAuthUser(userData);
-            toast.success("Registration successful");
+            toast.success("Registration successful");            
             navigate("/");
         } catch (err) {
             console.error(err.message);
+            toast.error("An error occurred during registration");
         }
-    }
+    };
 
     return { register };
-
 };
 
 function handleInputError({ fullName, email, password, confirmPassword, drivingLicense, licensePlate }) {
-    if (!fullName || !email || !password || !confirmPassword || !drivingLicense || !licensePlate) {
-        toast.error("Please fill all the fields");
+    if (!fullName || !email || !password || !confirmPassword || !licensePlate) {
+        toast.error("Please fill all the required fields");
         return false;
     }
     if (password !== confirmPassword) {
@@ -50,3 +57,5 @@ function handleInputError({ fullName, email, password, confirmPassword, drivingL
     }
     return true;
 }
+
+export default useDriverRegister;

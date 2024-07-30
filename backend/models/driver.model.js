@@ -25,6 +25,9 @@ const driverSchema = new mongoose.Schema({
     verificationToken: {
         type: String
     },
+    drivingLicenseImagePath: {
+        type: String
+    },
 },
     {
         timestamps: true

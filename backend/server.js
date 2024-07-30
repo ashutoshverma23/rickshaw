@@ -8,12 +8,17 @@ import userStatusRoutes from "./routes/userStatus.routes.js";
 import http from 'http';
 import { Server } from 'socket.io';
 import cookieParser from "cookie-parser";
+import fileUpload from "express-fileupload";
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
 const server = http.createServer(app);
 const io = new Server(server);
+
+app.use(fileUpload({
+    useTempFiles: true,
+}));
 
 app.use(cookieParser());
 

@@ -1,39 +1,49 @@
 import React from "react";
-// import background from "../assets/about.jpg";
-import background from "../../assets/rickshawBg.jpg";
-import Footer from "../../components/Footer";
+import aboutUs from "../../assets/aboutUs.png";
 
 const About = () => {
   return (
-    <>
-      <header
-        className="bg-cover bg-center h-screen relative"
-        style={{
-          backgroundImage: `url(${background})`,
-        }}
-      >
-        <div className="bg-black bg-opacity-50 h-full flex items-center justify-center">
-          <div className="text-center text-white">
-            <h1 className="text-4xl font-bold">About Us</h1>
-            <div className="mt-8">
-              <div className="bg-white text-black inline-block p-4 rounded-lg md:w-2/3 w-10/12">
-                <p className="md:text-lg text-sm font-medium mb-4">
-                  We are working to provide a platform for the rickshaw drivers
-                  as well as the passengers to connect with each other and make
-                  their journey easy and comfortable. This Application provides
-                  an easy way to for passenges to look for a nearby rickshaw for
-                  thei daily commute, rental or outstation trips and for the
-                  drivers to get the location of passengers that want to travel.
-                  This can be done by showing the location of the driver and the
-                  passenger on the map and their active status that can be
-                  turned on and off through a button.
-                </p>
-              </div>
+    <div className="min-h-screen bg-gradient-to-b from-green-50 to-green-100 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto">
+        <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-center text-green-800 mb-12">
+          About Us
+        </h1>
+
+        <div className="flex flex-col lg:flex-row items-center justify-between space-y-8 lg:space-y-0 lg:space-x-12">
+          <div className="w-full lg:w-1/2 bg-white rounded-xl shadow-lg overflow-hidden">
+            <div className="bg-orange-100 p-6 md:p-8 lg:p-10">
+              <p className="text-gray-800 text-base md:text-lg leading-relaxed mb-4">
+                We are dedicated to revolutionizing urban transportation by
+                connecting rickshaw drivers and passengers through an innovative
+                platform. Our mission is to make daily commutes, rentals, and
+                outstation trips easier and more comfortable for everyone.
+              </p>
+              <p className="text-gray-800 text-base md:text-lg leading-relaxed">
+                Our application provides a seamless way for passengers to find
+                nearby rickshaws and for drivers to locate potential customers.
+                By displaying real-time locations and active statuses on an
+                interactive map, we're bridging the gap between service
+                providers and users, creating a more efficient and user-friendly
+                transportation ecosystem.
+              </p>
+            </div>
+            <div className="bg-green-600 p-4 text-center">
+              <a href="#" className="text-white font-semibold hover:underline">
+                Learn More About Our Mission
+              </a>
             </div>
           </div>
+
+          <div className="w-full lg:w-1/2">
+            <img
+              src={aboutUs}
+              alt="Rickshaw driver and passenger"
+              className="object-cover w-full h-auto"
+            />
+          </div>
         </div>
-      </header>
-    </>
+      </div>
+    </div>
   );
 };
 

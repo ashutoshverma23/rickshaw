@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import { useDriverRegister } from "../../hooks/useDriverRegister";
-import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const DriverRegistration = () => {
   const [inputs, setInputs] = useState({
@@ -8,21 +9,37 @@ const DriverRegistration = () => {
     email: "",
     password: "",
     confirmPassword: "",
-    drivingLicense: "",
     licensePlate: "",
   });
 
-  const { register } = useDriverRegister();
-
+  const [drivingLicense, setDrivingLicense] = useState(null);
   const [hasDrivingLicense, setHasDrivingLicense] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { register } = useDriverRegister();
+  const navigate = useNavigate();
 
   const handleRadioChange = (event) => {
     setHasDrivingLicense(event.target.value);
   };
 
-  const handleSubmit = (e) => {
+  const handleFileChange = (event) => {
+    setDrivingLicense(event.target.files[0]);
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    register(inputs);
+    if (isSubmitting) return;
+
+    setIsSubmitting(true);
+    try {
+      await register({ ...inputs, drivingLicense });
+      toast.success("Registration successful!");
+      setTimeout(() => navigate("/"), 2000); // Navigate after 2 seconds
+    } catch (error) {
+      toast.error(error.message || "Registration failed. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -53,7 +70,7 @@ const DriverRegistration = () => {
               onChange={(e) => setInputs({ ...inputs, email: e.target.value })}
             />
             <input
-              type="text"
+              type="password"
               placeholder="Enter your password"
               className="p-2 rounded-md border-2 border-gray-400"
               value={inputs.password}
@@ -100,10 +117,7 @@ const DriverRegistration = () => {
                 type="file"
                 accept=".pdf,.jpg,.jpeg,.png"
                 className="p-2 rounded-md border-2 border-gray-400 bg-white text-gray-500"
-                value={inputs.drivingLicense}
-                onChange={(e) =>
-                  setInputs({ ...inputs, drivingLicense: e.target.value })
-                }
+                onChange={handleFileChange}
               />
             )}
             <input
@@ -116,8 +130,15 @@ const DriverRegistration = () => {
               }
             />
 
-            <button className="bg-green-500 p-2 rounded-md mb-4">
-              Register
+            <button
+              className={`bg-green-500 p-2 rounded-md mb-4 ${
+                isSubmitting
+                  ? "opacity-50 cursor-not-allowed"
+                  : "hover:bg-green-600"
+              }`}
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "Registering..." : "Register"}
             </button>
           </form>
         </div>

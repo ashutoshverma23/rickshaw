@@ -1,10 +1,9 @@
 import React, { useState } from "react";
+import { FaChevronDown } from "react-icons/fa";
 
 const Help = () => {
-  // State to manage visibility of answers
   const [visibleAnswers, setVisibleAnswers] = useState({});
 
-  // Function to toggle visibility
   const toggleAnswerVisibility = (index) => {
     setVisibleAnswers((prevState) => ({
       ...prevState,
@@ -12,90 +11,106 @@ const Help = () => {
     }));
   };
 
+  const renderQuestions = (questions, category) => (
+    <ul className="space-y-4">
+      {questions.map((item, index) => (
+        <li
+          key={index}
+          className="bg-white rounded-lg shadow-md overflow-hidden"
+        >
+          <button
+            className="w-full text-left p-4 flex justify-between items-center focus:outline-none"
+            onClick={() => toggleAnswerVisibility(`${category}-${index}`)}
+          >
+            <span className="font-medium text-gray-800">{item.question}</span>
+            <FaChevronDown
+              className={`text-gray-500 transform transition-transform duration-200 ${
+                visibleAnswers[`${category}-${index}`] ? "rotate-180" : ""
+              }`}
+            />
+          </button>
+          <div
+            className={`px-4 pb-4 text-gray-600 transition-all duration-500 ease-in-out ${
+              visibleAnswers[`${category}-${index}`]
+                ? "max-h-40 opacity-100"
+                : "max-h-0 opacity-0"
+            } overflow-hidden`}
+          >
+            {item.answer}
+          </div>
+        </li>
+      ))}
+    </ul>
+  );
+
   const securityQuestions = [
     {
-      question: "How to secure user data?",
+      question: "How do you secure user data?",
       answer:
-        "Use encryption, secure passwords, and other best practices to protect user data. Also, ensure that data is stored securely and access is restricted to authorized personnel only.",
+        "We employ industry-standard encryption, secure password hashing, and strict access controls to protect user data. All information is stored securely, and access is restricted to authorized personnel only.",
     },
     {
-      question: "Preventing unauthorized access",
+      question: "How do you prevent unauthorized access?",
       answer:
-        "Implement strong authentication mechanisms, monitor access logs, and use security software.",
+        "We implement strong authentication mechanisms, regularly monitor access logs, and use advanced security software to detect and prevent unauthorized access attempts.",
     },
     {
-      question: "Implementing secure authentication",
+      question: "What authentication methods do you use?",
       answer:
-        "Use multi-factor authentication, strong passwords, and OAuth 2.0 for secure authentication.",
+        "We utilize Email Verification of user while registration, enforce strong password policies, and implement OAuth 2.0 for secure third-party authentication where applicable.",
     },
   ];
 
   const featureQuestions = [
     {
-      question: "How to find available rickshaws?",
+      question: "How can I find available rickshaws?",
       answer:
-        "Use the app's search feature to find available rickshaws in your area.",
+        "Passengers icon is shown green and Rickshaw icon is shown red on the map. You can view all available rickshaws in your area on the map after setting active to yourself, that means you want to travel.",
     },
     {
-      question: "Booking a rickshaw",
+      question: "How do I find Passengers?",
       answer:
-        "Select a rickshaw from the available list and follow the booking process in the app.",
+        "Rickshaw icon is shown red and Passengers icon is shown green on the map. You can view all available passengers in your area on the map after setting active to yourself, that means you are ready to travel.",
     },
     {
-      question: "Tracking the location of a booked rickshaw",
+      question: "How to check routes and estimated time?",
       answer:
-        "Use the app's tracking feature to see the real-time location of your booked rickshaw.",
+        "You can check routes on the home page to see the estimated time and distance between your current location and your destination. You can directly use you location, If you are logged in.",
     },
   ];
 
   return (
-    <div className="flex flex-col justify-center p-4 md:px-10 ">
-      <h1 className="text-4xl font-semibold text-center">Help</h1>
-      <h3 className="md:text-3xl">Security</h3>
-      <ul>
-        {securityQuestions.map((item, index) => (
-          <li key={index} className="relative">
-            <button
-              className="question"
-              onClick={() => toggleAnswerVisibility(`security-${index}`)}
+    <div className="min-h-screen bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-3xl mx-auto">
+        <h1 className="text-4xl font-bold text-center text-gray-900 mb-8">
+          Help Center
+        </h1>
+
+        <section className="mb-8">
+          <h2 className="text-2xl font-semibold text-gray-800 mb-4">
+            Security
+          </h2>
+          {renderQuestions(securityQuestions, "security")}
+        </section>
+
+        <section className="mb-8">
+          <h2 className="text-2xl font-semibold text-gray-800 mb-4">
+            Features
+          </h2>
+          {renderQuestions(featureQuestions, "feature")}
+        </section>
+
+        <div className="text-center mt-8 p-4 bg-white rounded-lg shadow-md">
+          <p className="text-gray-600">
+            Need more help? Contact our support team at{" "}
+            <a
+              href="mailto:ashutoshrgnict@gmail.com"
+              className="text-blue-600 hover:underline"
             >
-              {item.question}
-            </button>
-            <div
-              className={`answer ml-2 bg-slate-400 ${
-                visibleAnswers[`security-${index}`] ? "visible" : "hidden"
-              }`}
-            >
-              {item.answer}
-            </div>
-          </li>
-        ))}
-      </ul>
-      <h3 className="md:text-3xl mt-4">Features</h3>
-      <ul>
-        {featureQuestions.map((item, index) => (
-          <li key={index} className="relative">
-            <button
-              className="question"
-              onClick={() => toggleAnswerVisibility(`feature-${index}`)}
-            >
-              {item.question}
-            </button>
-            <div
-              className={`answer ${
-                visibleAnswers[`feature-${index}`] ? "visible" : "hidden"
-              }`}
-            >
-              {item.answer}
-            </div>
-          </li>
-        ))}
-      </ul>
-      <div className="text-center mt-4">
-        <p>
-          For more help, please contact our support team at{" "}
-          <a href="mailto:ashutoshrgnict@gmail.com">ashutoshrgnict@gmail.com</a>
-        </p>
+              ashutoshrgnict@gmail.com
+            </a>
+          </p>
+        </div>
       </div>
     </div>
   );

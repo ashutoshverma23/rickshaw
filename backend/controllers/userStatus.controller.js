@@ -25,3 +25,16 @@ export const getActiveUsers = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 };
+
+export const getUserStatus = async (req, res) => {
+    const userId = req.params.userId;
+
+    try {
+        const userstatus = await UserStatus.findOne
+            ({ userId });
+        res.json(userstatus);
+    }
+    catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+}

@@ -2,11 +2,31 @@ import bcrypt from 'bcryptjs';
 import Driver from '../models/driver.model.js';
 import generateTokenAndSetCookie from '../utils/generateToken.js';
 import { createTransporter } from './email.controller.js';
+import { v2 as cloudinary } from 'cloudinary';
+
+cloudinary.config({
+    cloud_name: process.env.CLOUD_NAME,
+    api_key: process.env.CLOUD_API_KEY,
+    api_secret: process.env.CLOUD_API_SECRET,
+});
 
 // Register controller
 export const register = async (req, res) => {
     try {
         const { fullName, email, password, confirmPassword, licensePlate } = req.body;
+        let drivingLicenseImagePath = '';
+
+        if (req.files && req.files.drivingLicense) {
+            const file = req.files.drivingLicense;
+            try {
+                const result = await cloudinary.uploader.upload(file.tempFilePath);
+                drivingLicenseImagePath = result.secure_url;
+            } catch (err) {
+                console.log("Error in cloudinary", err.message);
+                return res.status(500).json({ message: 'Error uploading driving license' });
+            }
+        }
+
         const verificationToken = Math.floor(100000 + Math.random() * 900000).toString();
 
         if (password !== confirmPassword) {
@@ -14,8 +34,8 @@ export const register = async (req, res) => {
         }
 
         // Check if the email is already registered
-        const existingdriver = await Driver.findOne({ email });
-        if (existingdriver) {
+        const existingDriver = await Driver.findOne({ email });
+        if (existingDriver) {
             return res.status(400).json({ message: 'Email already registered' });
         }
 
@@ -24,20 +44,18 @@ export const register = async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, salt);
 
         // Create a new driver
-        const newdriver = new Driver({
+        const newDriver = new Driver({
             fullName,
             email,
             password: hashedPassword,
             licensePlate,
             verificationToken,
+            drivingLicenseImagePath,
         });
 
-        if (newdriver) {
-            generateTokenAndSetCookie(newdriver._id, res);
+        await newDriver.save();
+        generateTokenAndSetCookie(newDriver._id, res);
 
-            await newdriver.save();
-
-        }
         const transporter = await createTransporter();
         await transporter.sendMail({
             from: 'ashutoshrgnict@gmail.com',
@@ -46,15 +64,13 @@ export const register = async (req, res) => {
             html: `Click <a href="http://localhost:3000/verify-email/${verificationToken}">here</a> to verify your email.`,
         });
 
-
         res.status(201).json({
-            _id: newdriver._id,
-            fullName: newdriver.fullName,
-            email: newdriver.email,
-            mesage: 'driver registered successfully. Please check your email to verify your account.',
-        })
+            _id: newDriver._id,
+            fullName: newDriver.fullName,
+            email: newDriver.email,
+            message: 'Driver registered successfully. Please check your email to verify your account.',
+        });
     } catch (error) {
-        // Handle any errors
         console.log("Error in register controller", error.message);
         res.status(500).json({ message: 'Internal server error' });
     }

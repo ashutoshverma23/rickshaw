@@ -28,6 +28,10 @@ app.use(cors({
 }));
 app.use(express.json());
 
+
+app.get("/", (req, res) => {
+    res.send("API is running");
+});
 app.use("/api/passenger", passengerRoutes);
 app.use("/api/driver", driverRoutes);
 app.use("/api/user-status", userStatusRoutes);

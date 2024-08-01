@@ -8,7 +8,7 @@ export default defineConfig({
     port: 3000,
     proxy: {
       '/api': {
-        target: 'http://localhost:5000', // Replace with your backend server URL
+        target: 'https://rickshaw.onrender.com/', // Replace with your backend server URL
         changeOrigin: true,
       },
     },

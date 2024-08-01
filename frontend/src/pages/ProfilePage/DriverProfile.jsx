@@ -18,7 +18,9 @@ const DriverProfile = () => {
 
   const fetchDriverProfile = async () => {
     try {
-      const response = await fetch(`${BACKEND_URL}/api/driver/profile`);
+      const response = await fetch(`${BACKEND_URL}/api/driver/profile`, {
+        credentials: "include",
+      });
       if (!response.ok) {
         throw new Error("Failed to fetch driver profile");
       }

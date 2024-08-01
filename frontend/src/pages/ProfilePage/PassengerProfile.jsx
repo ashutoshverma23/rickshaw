@@ -25,7 +25,9 @@ const PassengerProfile = () => {
 
   const fetchPassengerProfile = async () => {
     try {
-      const response = await fetch(`${BACKEND_URL}/api/passenger/profile`);
+      const response = await fetch(`${BACKEND_URL}/api/passenger/profile`, {
+        credentials: "include",
+      });
       if (!response.ok) {
         throw new Error("Failed to fetch passenger profile");
       }

@@ -6,7 +6,7 @@ import {
   FaCheckCircle,
   FaTimesCircle,
 } from "react-icons/fa";
-
+import { BACKEND_URL } from "../../../constants.js";
 const DriverProfile = () => {
   const [driver, setDriver] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -18,7 +18,7 @@ const DriverProfile = () => {
 
   const fetchDriverProfile = async () => {
     try {
-      const response = await fetch("/api/driver/profile");
+      const response = await fetch(`${BACKEND_URL}/api/driver/profile`);
       if (!response.ok) {
         throw new Error("Failed to fetch driver profile");
       }

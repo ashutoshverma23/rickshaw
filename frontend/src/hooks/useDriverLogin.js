@@ -1,6 +1,7 @@
 import { useAuthContext } from "../context/AuthContext";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { BACKEND_URL } from "../../constants.js";
 
 export const useDriverLogin = () => {
     const { setAuthUser } = useAuthContext();
@@ -11,7 +12,7 @@ export const useDriverLogin = () => {
         if (!success) return;
 
         try {
-            const response = await fetch("/api/driver/login", {
+            const response = await fetch(`${BACKEND_URL}/api/driver/login`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

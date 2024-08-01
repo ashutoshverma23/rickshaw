@@ -1,6 +1,7 @@
 import { useAuthContext } from "../context/AuthContext";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { BACKEND_URL } from "../../constants.js";
 
 export const usePassengerRegister = () => {
     const { setAuthUser } = useAuthContext();
@@ -11,7 +12,7 @@ export const usePassengerRegister = () => {
         if (!success) return;
 
         try {
-            const response = await fetch("/api/passenger/register", {
+            const response = await fetch(`${BACKEND_URL}/api/passenger/register`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

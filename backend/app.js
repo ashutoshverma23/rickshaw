@@ -24,7 +24,7 @@ app.use(fileUpload({
 app.use(cookieParser());
 
 app.use(cors({
-    origin: ["https://rickshaw.vercel.app", "http://localhost:3000/"],
+    origin: ["https://rickshaw.vercel.app", "http://localhost:3000"],
     credentials: true,
 }));
 app.use(express.json());

@@ -6,11 +6,5 @@ export default defineConfig({
   plugins: [react()],
   server: {
     port: 3000,
-    proxy: {
-      '/api': {
-        target: 'https://rickshaw.onrender.com', // Replace with your backend server URL
-        changeOrigin: true,
-      },
-    },
   }
 })

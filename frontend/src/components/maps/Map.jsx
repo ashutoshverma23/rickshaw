@@ -5,6 +5,7 @@ import { useAuthContext } from "../../context/AuthContext";
 import SetViewOnClick from "./SetViewOnClick";
 import UserMarker from "./UserMarker";
 import OtherUserMarkers from "./OtherUserMarker";
+import { BACKEND_URL } from "../../../constants.js";
 
 function Map() {
   const { authUser } = useAuthContext();
@@ -19,7 +20,7 @@ function Map() {
     if (!authUser) return; // Exit early if authUser is not available
 
     try {
-      await fetch("/api/user-status/update-status", {
+      await fetch(`${BACKEND_URL}/api/user-status/update-status`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -41,7 +42,9 @@ function Map() {
     if (!authUser) return; // Exit early if authUser is not available
 
     try {
-      const response = await fetch("/api/user-status/active-users");
+      const response = await fetch(
+        `${BACKEND_URL}/api/user-status/active-users`
+      );
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
@@ -95,7 +98,7 @@ function Map() {
 
     const newActiveState = !active;
     try {
-      await fetch("/api/user-status/update-status", {
+      await fetch(`${BACKEND_URL}/api/user-status/update-status`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

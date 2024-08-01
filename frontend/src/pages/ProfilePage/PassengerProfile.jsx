@@ -7,6 +7,7 @@ import {
   FaCheckCircle,
   FaTimesCircle,
 } from "react-icons/fa";
+import { BACKEND_URL } from "../../../constants.js";
 
 const PassengerProfile = () => {
   const [passenger, setPassenger] = useState(null);
@@ -24,7 +25,7 @@ const PassengerProfile = () => {
 
   const fetchPassengerProfile = async () => {
     try {
-      const response = await fetch("/api/passenger/profile");
+      const response = await fetch(`${BACKEND_URL}/api/passenger/profile`);
       if (!response.ok) {
         throw new Error("Failed to fetch passenger profile");
       }

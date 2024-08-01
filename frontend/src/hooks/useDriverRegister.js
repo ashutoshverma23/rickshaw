@@ -1,6 +1,7 @@
 import { useAuthContext } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { BACKEND_URL } from "../../constants.js";
 
 export const useDriverRegister = () => {
     const { setAuthUser } = useAuthContext();
@@ -21,7 +22,7 @@ export const useDriverRegister = () => {
         }
 
         try {
-            const response = await fetch("/api/driver/register", {
+            const response = await fetch(`${BACKEND_URL}/api/driver/register`, {
                 method: "POST",
                 body: formData,
             });
@@ -35,7 +36,7 @@ export const useDriverRegister = () => {
             const userData = { ...data, role: "driver" };
             localStorage.setItem("User", JSON.stringify(userData));
             setAuthUser(userData);
-            toast.success("Registration successful");            
+            toast.success("Registration successful");
             navigate("/");
         } catch (err) {
             console.error(err.message);

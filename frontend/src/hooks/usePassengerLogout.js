@@ -1,12 +1,13 @@
 import { useAuthContext } from "../context/AuthContext";
 import toast from "react-hot-toast";
+import { BACKEND_URL } from "../../constants.js";
 
 const usePassengerLogout = () => {
     const { setAuthUser } = useAuthContext();
 
     const passengerLogout = async () => {
         try {
-            const response = await fetch("/api/passenger/logout", {
+            const response = await fetch(`${BACKEND_URL}/api/passenger/logout`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

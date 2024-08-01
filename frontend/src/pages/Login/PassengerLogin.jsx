@@ -44,7 +44,9 @@ const PassengerLogin = () => {
               }
             />
             <div className="mt-2 mb-2">
-              <Link to="/signup">{"Don't"} have an account? Sign up</Link>
+              <Link to="/passenger-register">
+                {"Don't"} have an account? Register
+              </Link>
             </div>
 
             <button className="bg-green-500 p-2 rounded-md mb-4">Login</button>

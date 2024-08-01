@@ -15,6 +15,7 @@ import {
   reverseGeocode,
   getRouteDetails,
 } from "../../utils/AddressDecode";
+import { BACKEND_URL } from "../../../constants.js";
 
 const MapController = ({ route }) => {
   const map = useMap();
@@ -47,7 +48,7 @@ const RouteMap = () => {
     const userId = authUser._id;
 
     try {
-      const response = await fetch(`/api/user-status/${userId}`);
+      const response = await fetch(`${BACKEND_URL}/api/user-status/${userId}`);
       const data = await response.json();
       if (data && data.location) {
         const { coordinates } = data.location;

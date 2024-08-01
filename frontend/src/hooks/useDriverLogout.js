@@ -1,12 +1,13 @@
 import toast from "react-hot-toast";
 import { useAuthContext } from "../context/AuthContext";
+import { BACKEND_URL } from "../../constants.js";
 
 const useDriverLogout = () => {
     const { setAuthUser } = useAuthContext();
 
     const driverLogout = async () => {
         try {
-            const response = await fetch("/api/driver/logout", {
+            const response = await fetch(`${BACKEND_URL}/api/driver/logout`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

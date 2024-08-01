@@ -16,6 +16,7 @@ const PORT = process.env.PORT || 5000;
 const server = http.createServer(app);
 const io = new Server(server);
 
+dotenv.config();
 app.use(fileUpload({
     useTempFiles: true,
 }));
@@ -26,7 +27,6 @@ app.use(cors({
     origin: "http://localhost:3000/",
 }));
 app.use(express.json());
-dotenv.config();
 
 app.use("/api/passenger", passengerRoutes);
 app.use("/api/driver", driverRoutes);

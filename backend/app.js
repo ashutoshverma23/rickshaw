@@ -24,7 +24,8 @@ app.use(fileUpload({
 app.use(cookieParser());
 
 app.use(cors({
-    origin: "http://localhost:3000/",
+    origin: ["https://rickshaw.onrender.com", "http://localhost:3000/"],
+    credentials: true,
 }));
 app.use(express.json());
 

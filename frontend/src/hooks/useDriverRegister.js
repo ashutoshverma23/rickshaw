@@ -23,6 +23,7 @@ export const useDriverRegister = () => {
 
         try {
             const response = await fetch(`${BACKEND_URL}/api/driver/register`, {
+                credentials: "include",
                 method: "POST",
                 body: formData,
             });

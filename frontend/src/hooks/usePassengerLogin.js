@@ -13,6 +13,7 @@ export const usePassengerLogin = () => {
 
         try {
             const response = await fetch(`${BACKEND_URL}/api/passenger/login`, {
+                credentials: "include",
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

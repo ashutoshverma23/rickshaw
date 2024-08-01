@@ -13,6 +13,7 @@ export const usePassengerRegister = () => {
 
         try {
             const response = await fetch(`${BACKEND_URL}/api/passenger/register`, {
+                credentials: "include",
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

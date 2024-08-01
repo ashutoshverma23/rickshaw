@@ -8,6 +8,7 @@ const usePassengerLogout = () => {
     const passengerLogout = async () => {
         try {
             const response = await fetch(`${BACKEND_URL}/api/passenger/logout`, {
+                credentials: "include",
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

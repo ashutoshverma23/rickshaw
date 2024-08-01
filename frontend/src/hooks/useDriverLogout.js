@@ -8,6 +8,7 @@ const useDriverLogout = () => {
     const driverLogout = async () => {
         try {
             const response = await fetch(`${BACKEND_URL}/api/driver/logout`, {
+                credentials: "include",
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

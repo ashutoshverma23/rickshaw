@@ -13,6 +13,7 @@ export const useDriverLogin = () => {
 
         try {
             const response = await fetch(`${BACKEND_URL}/api/driver/login`, {
+                credentials: "include",
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
